@@ -1,37 +1,39 @@
 import * as fs from 'fs';
-import { ProgramInput } from './inputInterface';
 import { BinaryPolynomial } from './coordinate/binaryPolynomial';
 import { mapCoefficients } from './utils/mapCoefficients';
-import bigInt = require('big-integer');
 import { BinaryPoint } from './point/binaryPoint';
+import { Coordinate } from './coordinate/coordinate';
+import { Curve } from './curve/curve';
+import { FieldTypeEnum } from './fieldTypeEnum';
+import bigInt = require('big-integer');
+import { IPoint } from './point/pointInterface';
+import { ICoordinate } from './coordinate/coordinateInterface';
 
-const input: ProgramInput = require('./input.json');
+const input = require('./input.json');
 
 (() => {
-    const {
-        characteristic, a, b, generator, factor, x, x1, x2, y, y1, y2,
-    } = input;
+    const { module } = input;
 
-    if (characteristic <= 3 && characteristic !== 2) {
-        console.error('char(F) === 2 or char(F) > 3');
-    }
+    if (Array.isArray(module)) {
+        const inputBinary = <number[]> input;
+        const { a, b, factor, x, x1, x2, y, y1, y2 } = input;
 
-    if (characteristic === 2) {
-        if (!generator || generator.length === 0) {
+        if (!module || module.length === 0) {
             console.error('Введите коэффициенты порождающего многочлена');
         }
 
-        const generatingCoefficients = mapCoefficients(generator);
-        const generatingPolynomial = new BinaryPolynomial(generatingCoefficients);
+        const modulePolynomial = new BinaryPolynomial(mapCoefficients(module));
 
-        if (typeof a === 'string' || typeof b === 'string') {
-            console.error('Введите коэффициенты точек A и B в виде массива');
-            return;
-        }
-        const aCoefficients = mapCoefficients(a);
-        const aPolynomial = new BinaryPolynomial(aCoefficients);
-        const bCoefficients = mapCoefficients(b);
-        const bPolynomial = new BinaryPolynomial(bCoefficients);
+        const aPolynomial = new BinaryPolynomial(mapCoefficients(a));
+        const bPolynomial = new BinaryPolynomial(mapCoefficients(b));
+
+        const curve: Curve<BinaryPolynomial> = new Curve<BinaryPolynomial>(
+            FieldTypeEnum.prime,
+            false,
+            aPolynomial,
+            bPolynomial,
+            modulePolynomial,
+        );
 
         // Умножение
         if (factor) {
@@ -41,12 +43,16 @@ const input: ProgramInput = require('./input.json');
                 console.error('Введите коэффициенты точек (X, Y)) в виде массива');
                 return;
             }
-            const xCoefficients = mapCoefficients(x);
-            const xPolynomial = new BinaryPolynomial(xCoefficients);
-            const yCoefficients = mapCoefficients(y);
-            const yPolynomial = new BinaryPolynomial(yCoefficients);
+            const xPolynomial = new BinaryPolynomial(mapCoefficients(x));
+            const yPolynomial = new BinaryPolynomial(mapCoefficients(y));
 
-            const point = new BinaryPoint(xPolynomial, yPolynomial, generatingPolynomial, false);
+            const point = new BinaryPoint(xPolynomial, yPolynomial, modulePolynomial, false);
+
+            if (!curve.isPointLiesOnCurve(point)) {
+                console.error('Точка не лежит на кривой.');
+                return;
+            }
+
             const result = point.multiply(factorBigInt, aPolynomial);
             console.log(xPolynomial, yPolynomial, aPolynomial, factorBigInt.toString(), result);
         } else {
@@ -54,28 +60,39 @@ const input: ProgramInput = require('./input.json');
                 console.error('Введите коэффициенты точек (X1, Y1), (X2, Y2) в виде массива');
                 return;
             }
-            const x1Coefficients = mapCoefficients(x1);
-            const x1Polynomial = new BinaryPolynomial(x1Coefficients);
-            const y1Coefficients = mapCoefficients(y1);
-            const y1Polynomial = new BinaryPolynomial(y1Coefficients);
+            const x1Polynomial = new BinaryPolynomial(mapCoefficients(x1));
+            const y1Polynomial = new BinaryPolynomial(mapCoefficients(y1));
 
-            const x2Coefficients = mapCoefficients(x2);
-            const x2Polynomial = new BinaryPolynomial(x2Coefficients);
-            const y2Coefficients = mapCoefficients(y2);
-            const y2Polynomial = new BinaryPolynomial(y2Coefficients);
+            const x2Polynomial = new BinaryPolynomial(mapCoefficients(x2));
+            const y2Polynomial = new BinaryPolynomial(mapCoefficients(y2));
 
-            const pointA = new BinaryPoint(x1Polynomial, y1Polynomial, generatingPolynomial, false);
-            const pointB = new BinaryPoint(x2Polynomial, y2Polynomial, generatingPolynomial, false);
+            const pointA = new BinaryPoint(x1Polynomial, y1Polynomial, modulePolynomial, false);
+            if (!curve.isPointLiesOnCurve(pointA)) {
+                console.error('Точка А не лежит на кривой.');
+                return;
+            }
+
+            const pointB = new BinaryPoint(x2Polynomial, y2Polynomial, modulePolynomial, false);
+            if (!curve.isPointLiesOnCurve(pointB)) {
+                console.error('Точка В не лежит на кривой.');
+                return;
+            }
+
             const result = pointA.add(pointB, aPolynomial);
             console.log(result);
         }
+    } else if (typeof module === 'string') {
+        const inputPrime = <string> input;
+        const { a, b, factor, x, x1, x2, y, y1, y2 } = input;
+        const moduleCoordinate = new Coordinate(module);
 
-    } else {
-
+        if (moduleCoordinate.getValue().leq(bigInt('3'))) {
+            console.error('char(F) === 2 or char(F) > 3');
+        }
     }
 
     fs.writeFile('output.txt', 'Hello Node.js', (err) => {
         if (err) throw err;
         console.log('It\'s saved!');
     });
-})()
+})();

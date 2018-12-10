@@ -9,8 +9,8 @@ describe('mapCoefficients', function () {
     });
 
     it('null', () => {
-        const arr = [ ];
-        const expected = [ ];
+        const arr: number[] = [ ];
+        const expected: number[] = [ ];
 
         expect(mapCoefficients(arr)).toEqual(expected);
     });

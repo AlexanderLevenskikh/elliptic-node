@@ -1,13 +1,12 @@
-export interface ProgramInput {
-    characteristic: number,
-    generator: number[],
-    a: number[] | string;
-    b: number[] | string;
+export interface ProgramInput<T extends number[] | string> {
+    module: T,
+    a: T;
+    b: T;
     factor?: string,
-    x?: number[] | string;
-    y?: number[] | string;
-    x1?: number[] | string;
-    y1?: number[] | string;
-    x2?: number[] | string;
-    y2?: number[] | string;
+    x?: T;
+    y?: T;
+    x1?: T;
+    y1?: T;
+    x2?: T;
+    y2?: T;
 }
