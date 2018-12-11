@@ -40,7 +40,7 @@ export function handler(input: any): string {
 
         // Умножение
         if (factor) {
-            const factorBigInt = bigInt(factor);
+            const factorBigInt = factor.startsWith('0x') ? bigInt(factor.slice(2).toLowerCase(), 16) : bigInt(factor);
 
             let point;
 
@@ -115,7 +115,7 @@ export function handler(input: any): string {
 
         // Умножение
         if (factor) {
-            const factorBigInt = bigInt(factor);
+            const factorBigInt = factor.startsWith('0x') ? bigInt(factor.slice(2).toLowerCase(), 16) : bigInt(factor);
 
             let point;
 
