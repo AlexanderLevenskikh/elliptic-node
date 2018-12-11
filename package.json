@@ -7,6 +7,7 @@
     "typescript": "^3.1.6"
   },
   "scripts": {
+    "build": "webpack",
     "start": "node dist/index.js",
     "start-nodemon": "nodemon dist/index.js",
     "build-ts": "tsc",
@@ -21,11 +22,15 @@
     "@babel/preset-typescript": "^7.1.0",
     "@types/jest": "^23.3.9",
     "@types/node": "^10.12.9",
+    "awesome-typescript-loader": "^5.2.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^7.0.0-bridge.0",
+    "babel-loader": "^8.0.0-beta.4",
     "jest": "22.4.3",
     "nodemon": "^1.18.7",
-    "ts-jest": "^23.10.3"
+    "ts-jest": "^23.10.3",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"

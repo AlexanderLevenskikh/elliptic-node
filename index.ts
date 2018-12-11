@@ -5,8 +5,9 @@ const input = require('./input.json');
 
 const result = handler(input);
 
-fs.writeFile('output.txt', result, (err) => {
+console.log(result);
+/*fs.writeFile('output.txt', result, (err) => {
     if (err) throw err;
-});
+});*/
 
 
