@@ -6,7 +6,7 @@ import { FieldTypeEnum } from '../fieldTypeEnum';
 import { BinaryPoint } from '../point/binaryPoint';
 import { Coordinate } from '../coordinate/coordinate';
 import { Point } from '../point/point';
-import bigInt = require('big-integer');
+import bigInt from 'big-integer';
 
 // @ts-ignore
 export function handler(input: any): string {
