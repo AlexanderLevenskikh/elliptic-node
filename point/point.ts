@@ -2,6 +2,7 @@ import { IPoint } from './pointInterface';
 import { Coordinate } from '../coordinate/coordinate';
 import { PointAbstract } from './pointAbstract';
 import { BigInteger, one, zero } from 'big-integer';
+import { BinaryPolynomial } from '../coordinate/binaryPolynomial';
 
 export class Point extends PointAbstract<Coordinate> implements IPoint<Coordinate> {
     public infinityPointFactory = () => {
@@ -51,16 +52,37 @@ export class Point extends PointAbstract<Coordinate> implements IPoint<Coordinat
     }
 
     public multiply(factor: BigInteger, a: Coordinate): Point {
-        let result = this.infinityPointFactory();
+        if (factor.isEven()) {
+            return this.add(this._multiply(factor.minus(one), a), a);
+        } else {
+            return this._multiply(factor, a);
+        }
+    };
 
-        for (let i = zero; i.lesser(factor); i = i.add(one)) {
-            result = result.add(this, a);
+    public _multiply(factor: BigInteger, a: Coordinate): Point {
+        const binaryString = factor.toString(2);
+        let p1 = new Point(this.x, this.y, this.module, this.isInfinityPoint);
+        let p2 = p1.add(p1, a);
+
+        for (let i = binaryString.length - 2; i >= 0; i--) {
+            if (binaryString[ i ] === '1') {
+                p1 = p1.add(p2, a);
+                p2 = p2.add(p2, a);
+            } else {
+                p2 = p2.add(p1, a);
+                p1 = p1.add(p1, a);
+            }
         }
 
-        return result;
+        return p1;
+
     };
 
     public toHexString(): string {
-        return `(${this.getY().toHexString()}, ${this.getY().toHexString()})`
+        if (this.isInfinityPoint) {
+            return 'Inf';
+        }
+
+        return `(${this.getX().toHexString()}, ${this.getY().toHexString()})`
     }
 }

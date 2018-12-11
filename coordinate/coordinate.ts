@@ -6,7 +6,11 @@ export class Coordinate implements ICoordinate<Coordinate> {
 
     constructor(value: string | BigInteger) {
         if (typeof value === 'string') {
-            this.value = <BigInteger> bigInt(value);
+            if (value.startsWith('0x')) {
+                this.value = <BigInteger> bigInt(value.slice(2).toLowerCase(), 16);
+            } else {
+                this.value = <BigInteger> bigInt(value);
+            }
         } else {
             this.value = value;
         }
@@ -87,6 +91,6 @@ export class Coordinate implements ICoordinate<Coordinate> {
     }
 
     public toHexString() {
-        return this.getValue().toString(16);
+        return '0x' + this.getValue().toString(16).toUpperCase();
     }
 }
