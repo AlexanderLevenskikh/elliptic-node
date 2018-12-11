@@ -178,4 +178,19 @@ export class BinaryPolynomial implements ICoordinate<BinaryPolynomial> {
         this.coefficients = [ ...normalizedCoefficients ];
         this.degree = normalizedCoefficients.length > 0 ? normalizedCoefficients.length - 1 : 0;
     }
+
+    public toString() {
+        const filtered = this.getCoefficients().map((c, index) => {
+            return c ?
+                index === 0 ? '1'
+                    : index === 1 ? 'x' : `x^${index}`
+                : null;
+        }).filter(Boolean);
+
+        if (filtered.length === 0) {
+            return '0';
+        }
+
+        return filtered.join(' + ');
+    }
 }

@@ -59,4 +59,8 @@ export class Point extends PointAbstract<Coordinate> implements IPoint<Coordinat
 
         return result;
     };
+
+    public toHexString(): string {
+        return `(${this.getY().toHexString()}, ${this.getY().toHexString()})`
+    }
 }

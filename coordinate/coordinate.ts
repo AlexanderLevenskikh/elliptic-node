@@ -81,4 +81,12 @@ export class Coordinate implements ICoordinate<Coordinate> {
 
         return new Coordinate(r2).mod(module);
     }
+
+    public toString() {
+        return this.getValue().toString();
+    }
+
+    public toHexString() {
+        return this.getValue().toString(16);
+    }
 }

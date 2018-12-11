@@ -165,6 +165,5 @@ const input = require('./input.json');
 
     fs.writeFile('output.txt', result ? result.toString() : '', (err) => {
         if (err) throw err;
-        console.log('It\'s saved!');
     });
 })();

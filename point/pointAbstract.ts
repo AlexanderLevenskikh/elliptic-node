@@ -42,4 +42,12 @@ export abstract class PointAbstract<T extends ICoordinate<T>> implements IPoint<
 
     public abstract add(point: PointAbstract<T>, a: T): PointAbstract<T>;
     public abstract multiply(factor: BigInteger, a: T): PointAbstract<T>;
+
+    public toString(): string {
+        if (this.isInfinityPoint) {
+            return 'Inf';
+        }
+
+        return `(${this.getX().toString()}, ${this.getY().toString()})`
+    }
 }

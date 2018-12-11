@@ -97,11 +97,27 @@ describe('binaryPoint tests', () => {
         const point = new BinaryPoint(x, y, module, false);
         const parameterA = new BinaryPolynomial([ true ]);
 
+        const multiplicationResult = point.multiply(bigInt('2'), parameterA);
+
+        expect(multiplicationResult.getX().getCoefficients()).toEqual([ true ]);
+        expect(multiplicationResult.getX().getDegree()).toEqual(0);
+        expect(multiplicationResult.getY().getCoefficients()).toEqual([ false, false, true ]);
+        expect(multiplicationResult.getY().getDegree()).toEqual(2);
+    });
+
+    it('scalar multiplication 3', () => {
+        const module = new BinaryPolynomial([ true, true, false, false, true ]); // GF(2^4)/(x4 + x + 1)
+
+        const x = new BinaryPolynomial([ true, true ]); // x + 1
+        const y = new BinaryPolynomial([ true, false, true ]); // x2 + 1
+        const point = new BinaryPoint(x, y, module, false);
+        const parameterA = new BinaryPolynomial([ true ]);
+
         const multiplicationResult = point.multiply(bigInt('3'), parameterA);
 
         expect(multiplicationResult.getX().getCoefficients()).toEqual([ true, true, true ]);
         expect(multiplicationResult.getX().getDegree()).toEqual(2);
-        expect(multiplicationResult.getY().getCoefficients()).toEqual([ false, false, true, true ]);
-        expect(multiplicationResult.getY().getDegree()).toEqual(3);
+        expect(multiplicationResult.getY().getCoefficients()).toEqual([ ]);
+        expect(multiplicationResult.getY().getDegree()).toEqual(0);
     });
 });
