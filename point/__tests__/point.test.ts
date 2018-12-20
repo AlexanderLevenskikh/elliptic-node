@@ -89,5 +89,33 @@ describe('point tests', () => {
 
         expect(result.getX().getValue().toString()).toEqual('80');
         expect(result.getY().getValue().toString()).toEqual('87');
-    })
+    });
+
+    it('scalar multiplication class', () => {
+        const module = new Coordinate('199');
+
+        const x = new Coordinate('1');
+        const y = new Coordinate('76');
+        const point = new Point(x, y, module, false);
+        const parameterA = new Coordinate('1');
+
+        const result = point.multiply(bigInt('197'), parameterA);
+
+        expect(result.isInfinity()).toBeTruthy();
+    });
+
+    it('addition two symmetry points 2', () => {
+        const module = new Coordinate('199');
+
+        const xA = new Coordinate('1');
+        const yA = new Coordinate('123');
+        const xB = new Coordinate('1');
+        const yB = new Coordinate('76');
+        const pointA = new Point(xA, yA, module, false);
+        const pointB = new Point(xB, yB, module, false);
+        const parameterA = new Coordinate('1');
+
+        const result = pointA.add(pointB, parameterA);
+        expect(result.isInfinity()).toBeTruthy();
+    });
 });

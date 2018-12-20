@@ -184,7 +184,7 @@ describe('handler test', () => {
                module: [ 4, 1, 0 ], // x^4 + x + 1
                a: [ 0 ], // 1
                b: [ 2, 1, 0 ], // x^2 + x + 1
-               factor: '14',
+               factor: '13',
                x: [ 1, 0 ], // x + 1
                y: [ 2, 0 ], // x^2 + 1
            };

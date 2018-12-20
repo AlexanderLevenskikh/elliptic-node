@@ -61,21 +61,17 @@ export class Point extends PointAbstract<Coordinate> implements IPoint<Coordinat
 
     public _multiply(factor: BigInteger, a: Coordinate): Point {
         const binaryString = factor.toString(2);
-        let p1 = new Point(this.x, this.y, this.module, this.isInfinityPoint);
-        let p2 = p1.add(p1, a);
+        let degree = new Point(this.x, this.y, this.module, this.isInfinityPoint);
+        let result = degree.infinityPointFactory();
 
-        for (let i = binaryString.length - 2; i >= 0; i--) {
-            if (binaryString[ i ] === '1') {
-                p1 = p1.add(p2, a);
-                p2 = p2.add(p2, a);
-            } else {
-                p2 = p2.add(p1, a);
-                p1 = p1.add(p1, a);
+        for (let i = 0; i < binaryString.length; i++) {
+            if (binaryString[binaryString.length - 1 - i] === '1') {
+                result = result.add(degree, a);
             }
+            degree = degree.add(degree, a);
         }
 
-        return p1;
-
+        return result;
     };
 
     public toHexString(): string {
